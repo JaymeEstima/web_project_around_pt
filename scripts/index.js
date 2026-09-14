@@ -27,12 +27,30 @@ const initialCards = [
 
 // --- Funções reutilizáveis de modal ---
 
+function handleEscKey(event) {
+  if (event.key === "Escape") {
+    const openedPopup = document.querySelector(".popup_is-opened");
+
+    if (openedPopup) {
+      closeModal(openedPopup);
+    }
+  }
+}
+
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
+  document.addEventListener("keydown", handleEscKey);
 }
 
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscKey);
+}
+
+function handleOverlayClick(event) {
+  if (event.target === event.currentTarget) {
+    closeModal(event.currentTarget);
+  }
 }
 
 // --- Elementos: Editar Perfil ---
@@ -56,6 +74,7 @@ function fillProfileForm() {
 
 function handleOpenEditModal() {
   fillProfileForm();
+  resetValidation(editForm, validationConfig);
   openModal(editPopup);
 }
 
@@ -87,6 +106,7 @@ const linkInput = addCardForm.querySelector(".popup__input_type_url");
 
 function handleOpenAddCardModal() {
   addCardForm.reset();
+  resetValidation(addCardForm, validationConfig);
   openModal(addCardPopup);
 }
 
@@ -139,7 +159,7 @@ function handleDeleteButtonClick(event) {
   cardElement.remove();
 }
 
-function getCardElement({ name = "Lugar sem nome", link = "./images/placeholder.jpg" } = {}) {
+function getCardElement({ name, link }) {
   const cardElement = cardTemplate.cloneNode(true);
 
   const cardImage = cardElement.querySelector(".card__image");
@@ -167,4 +187,10 @@ function renderCard(name, link, container) {
 
 initialCards.forEach((card) => {
   renderCard(card.name, card.link, cardsList);
+});
+
+const popupList = Array.from(document.querySelectorAll(".popup"));
+
+popupList.forEach((popup) => {
+  popup.addEventListener("mousedown", handleOverlayClick);
 });
