@@ -1,25 +1,47 @@
-# Tripleten web_project_around_pt
-
 # Around The U.S.
 
-Site interativo onde é possível visualizar cartões de lugares, adicionar novos, curtir, excluir e editar o perfil do usuário.
+Este é um projeto desenvolvido durante o curso de Engenharia de Software da TripleTen.
 
-Projeto feito durante o curso de Engenharia de Software (TripleTen). O HTML e o CSS já foram fornecidos pelo curso; o que eu fiz foi adicionar a interatividade com JavaScript, além de incluir um `<template>` no HTML para gerar os cartões dinamicamente.
+O projeto é uma página onde podemos adicionar fotos de lugares, curtir e excluir cartões, além de editar as informações do perfil.
 
 ## Funcionalidades
 
-- Editar nome e descrição do perfil
-- Adicionar novos cartões
-- Curtir cartões (o coração muda de cor)
-- Excluir cartões
-- Clicar na imagem de um cartão para ver ela ampliada
+* Editar o nome e a descrição do perfil
+* Adicionar novos cartões
+* Curtir os cartões
+* Excluir cartões
+* Abrir as imagens em tamanho maior
+* Fechar as janelas usando o botão, clicando fora delas ou apertando `Esc`
+* Validar os campos dos formulários
 
-## Tecnologias
+## Tecnologias utilizadas
 
-- HTML
-- CSS
-- JavaScript
+* HTML
+* CSS
+* JavaScript
+* Classes JavaScript
+* Módulos JavaScript
+* Flexbox
+* Grid
+* Design responsivo
+* Metodologia BEM
 
-## Como abrir
+Neste projeto também aprendi a organizar o código JavaScript usando arquivos separados, classes e módulos.
 
-Basta abrir o arquivo `index.html` no navegador.
+## Sobre o projeto
+
+Os cartões são criados através de JavaScript a partir de uma lista de lugares.
+
+Também foi criada uma validação para os formulários, mostrando mensagens de erro quando os campos não são preenchidos corretamente.
+
+O projeto foi desenvolvido seguindo o layout disponibilizado no Figma e funciona em diferentes tamanhos de tela.
+
+## Como abrir o projeto
+
+O projeto utiliza módulos JavaScript, então é necessário abrir através de um servidor local.
+
+No VS Code, pode ser utilizado o **Live Server** para executar o projeto.
+
+### Projeto publicado
+
+[Ver o projeto no GitHub Pages](https://jaymeestima.github.io/web_project_around_pt/)
