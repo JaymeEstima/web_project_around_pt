@@ -1,3 +1,16 @@
+import { openModal, closeModal, handleOverlayClick } from "./utils.js";
+import { Card } from "./Card.js";
+import { FormValidator } from "./FormValidator.js";
+
+const validationConfig = {
+    formSelector: ".popup__form",
+    inputSelector: ".popup__input",
+    submitButtonSelector: ".popup__button",
+    inactiveButtonClass: "popup__button_disabled",
+    inputErrorClass: "popup__input_type_error",
+    errorClass: "popup__error_visible",
+};
+
 const initialCards = [
   {
     name: "Yosemite Valley",
@@ -25,39 +38,15 @@ const initialCards = [
   },
 ];
 
-// --- Funções reutilizáveis de modal ---
-
-function handleEscKey(event) {
-  if (event.key === "Escape") {
-    const openedPopup = document.querySelector(".popup_is-opened");
-
-    if (openedPopup) {
-      closeModal(openedPopup);
-    }
-  }
-}
-
-function openModal(modal) {
-  modal.classList.add("popup_is-opened");
-  document.addEventListener("keydown", handleEscKey);
-}
-
-function closeModal(modal) {
-  modal.classList.remove("popup_is-opened");
-  document.removeEventListener("keydown", handleEscKey);
-}
-
-function handleOverlayClick(event) {
-  if (event.target === event.currentTarget) {
-    closeModal(event.currentTarget);
-  }
-}
 
 // --- Elementos: Editar Perfil ---
 
 const editPopup = document.querySelector("#edit-popup");
 const editPopupCloseButton = editPopup.querySelector(".popup__close");
 const editForm = editPopup.querySelector("#edit-profile-form");
+const editFormValidator = new FormValidator(validationConfig, editForm);
+editFormValidator.setEventListeners();
+
 const nameInput = editForm.querySelector(".popup__input_type_name");
 const descriptionInput = editForm.querySelector(
   ".popup__input_type_description"
@@ -74,7 +63,7 @@ function fillProfileForm() {
 
 function handleOpenEditModal() {
   fillProfileForm();
-  resetValidation(editForm, validationConfig);
+  editFormValidator.resetValidation();
   openModal(editPopup);
 }
 
@@ -97,8 +86,11 @@ editForm.addEventListener("submit", handleProfileFormSubmit);
 
 const addCardButton = document.querySelector(".profile__add-button");
 const addCardPopup = document.querySelector("#new-card-popup");
-const addCardPopupCloseButton = addCardPopup.querySelector(".popup__close");
 const addCardForm = addCardPopup.querySelector("#new-card-form");
+const addCardFormValidator = new FormValidator(validationConfig, addCardForm);
+addCardFormValidator.setEventListeners();
+
+const addCardPopupCloseButton = addCardPopup.querySelector(".popup__close");
 const placeNameInput = addCardForm.querySelector(
   ".popup__input_type_card-name"
 );
@@ -106,7 +98,7 @@ const linkInput = addCardForm.querySelector(".popup__input_type_url");
 
 function handleOpenAddCardModal() {
   addCardForm.reset();
-  resetValidation(addCardForm, validationConfig);
+  addCardFormValidator.resetValidation();
   openModal(addCardPopup);
 }
 
@@ -132,6 +124,8 @@ const imagePopupCloseButton = imagePopup.querySelector(".popup__close");
 const imagePopupImage = imagePopup.querySelector(".popup__image");
 const imagePopupCaption = imagePopup.querySelector(".popup__caption");
 
+const cardsList = document.querySelector(".cards__list");
+
 function handleImageClick(name, link) {
   imagePopupImage.src = link;
   imagePopupImage.alt = name;
@@ -143,47 +137,10 @@ imagePopupCloseButton.addEventListener("click", function () {
   closeModal(imagePopup);
 });
 
-// --- Cartões ---
-
-const cardsList = document.querySelector(".cards__list");
-const cardTemplate = document
-  .querySelector("#card-template")
-  .content.querySelector(".card");
-
-function handleLikeButtonClick(event) {
-  event.target.classList.toggle("card__like-button_is-active");
-}
-
-function handleDeleteButtonClick(event) {
-  const cardElement = event.target.closest(".card");
-  cardElement.remove();
-}
-
-function getCardElement({ name, link }) {
-  const cardElement = cardTemplate.cloneNode(true);
-
-  const cardImage = cardElement.querySelector(".card__image");
-  const cardTitle = cardElement.querySelector(".card__title");
-  const likeButton = cardElement.querySelector(".card__like-button");
-  const deleteButton = cardElement.querySelector(".card__delete-button");
-
-  cardImage.src = link;
-  cardImage.alt = name;
-  cardTitle.textContent = name;
-
-  likeButton.addEventListener("click", handleLikeButtonClick);
-  deleteButton.addEventListener("click", handleDeleteButtonClick);
-  cardImage.addEventListener("click", function () {
-    handleImageClick(name, link);
-  });
-
-  return cardElement;
-}
-
 function renderCard(name, link, container) {
-  const cardElement = getCardElement({ name, link });
+  const cardElement = new Card({ name, link } , "#card-template", handleImageClick).generateCard();
   container.prepend(cardElement);
-}
+} 
 
 initialCards.forEach((card) => {
   renderCard(card.name, card.link, cardsList);
