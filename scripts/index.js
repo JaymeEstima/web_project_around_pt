@@ -138,7 +138,7 @@ imagePopupCloseButton.addEventListener("click", function () {
 });
 
 function renderCard(name, link, container) {
-  const cardElement = new Card({ name, link } , "#card-template", handleImageClick).generateCard();
+  const cardElement = new Card({ name, link }, "#card-template", handleImageClick).generateCard();
   container.prepend(cardElement);
 } 
 
