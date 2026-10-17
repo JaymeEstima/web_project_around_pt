@@ -30,6 +30,11 @@
   min-height: 282px;
   max-height: 282px;
   object-fit: cover;
+  cursor: pointer;
+}
+
+.card__image:hover {
+  opacity: 0.9;
 }
 
 .card__like-button {
