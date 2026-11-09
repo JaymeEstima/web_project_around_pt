@@ -132,6 +132,14 @@
   padding: 0;
 }
 
+.popup__content_content_confirmation {
+  min-height: auto;
+}
+
+.popup__button_type_confirmation {
+  margin-top: 12px;
+}
+
 .popup__image {
   max-width: 100%;
   object-fit: cover;

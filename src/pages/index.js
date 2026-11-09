@@ -27,13 +27,10 @@ const userInfo = new UserInfo({
 
 const editButton = document.querySelector(".profile__edit-button");
 const profileAvatar = document.querySelector(".profile__image");
-
+const avatarEditButton = document.querySelector(".profile__avatar-button");
 const avatarForm = document.querySelector("#avatar-form");
 
-const avatarFormValidator = new FormValidator(
-  validationConfig,
-  avatarForm,
-);
+const avatarFormValidator = new FormValidator(validationConfig, avatarForm);
 
 avatarFormValidator.setEventListeners();
 
@@ -45,6 +42,7 @@ const avatarFormPopup = new PopupWithForm(
 avatarFormPopup.setEventListeners();
 
 function handleAvatarFormSubmit(formData) {
+  avatarFormPopup.renderLoading(true);
   api
     .setUserAvatar({ avatar: formData.avatar })
     .then((userData) => {
@@ -53,10 +51,13 @@ function handleAvatarFormSubmit(formData) {
     })
     .catch((error) => {
       console.error("Erro ao atualizar o avatar:", error);
+    })
+    .finally(() => {
+      avatarFormPopup.renderLoading(false);
     });
 }
 
-profileAvatar.addEventListener("click", () => {
+avatarEditButton.addEventListener("click", () => {
   avatarFormValidator.resetValidation();
   avatarFormPopup.open();
 });
@@ -78,20 +79,24 @@ editButton.addEventListener("click", handleOpenEditModal);
 const editFormPopup = new PopupWithForm("#edit-popup", handleProfileFormSubmit);
 
 function handleProfileFormSubmit(formData) {
-  api.setUserInfo({
-    name: formData.name,
-    about: formData.description,
-  })
+  editFormPopup.renderLoading(true);
+  api
+    .setUserInfo({
+      name: formData.name,
+      about: formData.description,
+    })
     .then((userData) => {
       userInfo.setUserInfo({
         name: userData.name,
         description: userData.about,
       });
-
       editFormPopup.close();
     })
     .catch((error) => {
       console.error("Erro ao atualizar o perfil:", error);
+    })
+    .finally(() => {
+      editFormPopup.renderLoading(false);
     });
 }
 
@@ -118,21 +123,24 @@ const addCardFormPopup = new PopupWithForm(
 );
 
 function handleCardFormSubmit(formData) {
-  api.addCard({
+  addCardFormPopup.renderLoading(true);
+  api
+    .addCard({
       name: formData["place-name"],
       link: formData.link,
     })
     .then((cardData) => {
       const cardElement = createCard(cardData);
       cardSection.addItem(cardElement);
-
       addCardFormPopup.close();
     })
     .catch((error) => {
       console.error("Erro ao adicionar cartão:", error);
+    })
+    .finally(() => {
+      addCardFormPopup.renderLoading(false);
     });
 }
-
 
 addCardFormPopup.setEventListeners();
 
@@ -182,7 +190,6 @@ function createCard(cardData) {
   return card.generateCard();
 }
 
-
 const cardSection = new Section(
   {
     items: [],
@@ -194,7 +201,8 @@ const cardSection = new Section(
   ".cards__list",
 );
 
-api.getAppInfo()
+api
+  .getAppInfo()
   .then(([userData, cardsData]) => {
     userInfo.setUserInfo({
       name: userData.name,
@@ -210,4 +218,3 @@ api.getAppInfo()
   .catch((error) => {
     console.error("Erro ao carregar os dados:", error);
   });
-

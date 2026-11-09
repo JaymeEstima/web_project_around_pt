@@ -1,14 +1,17 @@
 export class Card {
-  constructor({ name, link, _id, likes }, 
-    templateSelector, 
-    handleCardClick, 
-    handleDeleteClick, 
-    handleLikeClick, 
-    currentUserId) {
+  constructor(
+    { name, link, _id, isLiked, owner },
+    templateSelector,
+    handleCardClick,
+    handleDeleteClick,
+    handleLikeClick,
+    currentUserId,
+  ) {
     this._name = name;
     this._link = link;
     this._id = _id;
-    this._likes = likes;
+    this._isLiked = isLiked;
+    this._ownerId = owner;
     this._templateSelector = templateSelector;
     this._handleCardClick = handleCardClick;
     this._handleDeleteClick = handleDeleteClick;
@@ -17,11 +20,19 @@ export class Card {
   }
 
   _getTemplate() {
-    const cardTemplate = document
+    const cardElement = document
       .querySelector(this._templateSelector)
       .content.querySelector(".card")
       .cloneNode(true);
-    return cardTemplate;
+
+    return cardElement;
+  }
+
+  _renderLikeState() {
+    this._likeButton.classList.toggle(
+      "card__like-button_is-active",
+      this._isLiked,
+    );
   }
 
   generateCard() {
@@ -35,27 +46,20 @@ export class Card {
     this._cardImage.alt = this._name;
     this._cardTitle.textContent = this._name;
 
-    this._likeButton.classList.toggle(
-      "card__like-button_is-active",
-      this._likes.some((user) => user._id === this._currentUserId)
-    );
+    this._renderLikeState();
+
+    if (this._ownerId !== this._currentUserId) {
+      this._deleteButton.remove();
+    }
 
     this._setEventListeners();
     return this._element;
   }
 
   _handleLikeButtonClick() {
-    const isLiked = this._likeButton.classList.contains(
-      "card__like-button_is-active"
-    );
-
-    this._handleLikeClick(this._id, !isLiked, (updatedCard) => {
-      this._likes = updatedCard.likes;
-    
-      this._likeButton.classList.toggle(
-        "card__like-button_is-active",
-        this._likes.some((user) => user._id === this._currentUserId)
-      );
+    this._handleLikeClick(this._id, !this._isLiked, (updatedCard) => {
+      this._isLiked = updatedCard.isLiked;
+      this._renderLikeState();
     });
   }
 

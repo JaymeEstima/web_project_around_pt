@@ -18,7 +18,18 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <div class="profile__avatar">
+            <img
+              class="profile__image"
+              src="./images/avatar.jpg"
+              alt="Avatar"
+            />
+            <button
+              aria-label="Alterar foto de perfil"
+              class="profile__avatar-button"
+              type="button"
+            ></button>
+          </div>
           <div class="profile__info">
             <h1 class="profile__title">Jacques Cousteau</h1>
             <button
@@ -141,7 +152,7 @@
         </div>
       </div>
       <div class="popup" id="delete-card-popup">
-        <div class="popup__content">
+        <div class="popup__content popup__content_content_confirmation">
           <button
             aria-label="Fechar pop-up"
             class="popup__close"
@@ -149,7 +160,10 @@
           ></button>
           <h3 class="popup__title">Tem certeza?</h3>
           <form class="popup__form" id="delete-card-form">
-            <button class="button popup__button" type="submit">
+            <button
+              class="button popup__button popup__button_type_confirmation"
+              type="submit"
+            >
               Sim
             </button>
           </form>
@@ -173,9 +187,7 @@
               required
             />
             <span class="popup__error" id="avatar-input-error"></span>
-            <button class="button popup__button" type="submit">
-              Salvar
-            </button>
+            <button class="button popup__button" type="submit">Salvar</button>
           </form>
         </div>
       </div>
