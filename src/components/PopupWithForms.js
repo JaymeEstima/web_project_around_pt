@@ -22,6 +22,7 @@ export class PopupWithForm extends Popup {
     this._submitButton.textContent = isLoading
       ? loadingText
       : this._submitButtonText;
+    this._submitButton.disabled = isLoading;
   }
 
   setEventListeners() {
